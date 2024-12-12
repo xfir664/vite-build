@@ -1,24 +1,62 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+const div = document.querySelector(".container");
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+div.appendChild(document.createElement("table"));
 
-setupCounter(document.querySelector('#counter'))
+const table = document.querySelector("table");
+
+const maxRow = 10;
+const maxCol = 10;
+
+for (let i = 0; i < maxRow; i++) {
+  const tr = document.createElement("tr");
+  table.appendChild(tr);
+  for (let j = 0; j < maxCol; j++) {
+    const td = document.createElement("td");
+    td.classList.add("td");
+    td.textContent = j;
+    tr.appendChild(td);
+  }
+}
+
+const btn = document.createElement("button");
+btn.classList.add("button");
+btn.textContent = "start";
+div.appendChild(btn);
+
+btn.addEventListener("click", () => {
+  const allTd = document.querySelectorAll(".td");
+  const randomNumberArr = getRandomArr();
+
+  allTd.forEach((el, index) => {
+    el.className = "";
+    el.classList.add("td");
+    el.removeEventListener("click", onClick);
+    el.addEventListener("click", onClick);
+
+    function onClick() {
+      el.removeEventListener("click", onClick);
+      checkBlock(index, randomNumberArr, this);
+    }
+  });
+});
+
+function checkBlock(index, randomNumbersArr, elem) {
+  const randomArr = randomNumbersArr;
+  if (randomArr.includes(index)) {
+    elem.classList.add("succ");
+  } else {
+    elem.classList.add("wrong");
+  }
+}
+
+function getRandomArr() {
+  const numbers = new Set();
+
+  return (function () {
+    while (numbers.size < 10) {
+      const randomNumber = Math.floor(Math.random() * 100);
+      numbers.add(randomNumber);
+    }
+    return Array.from(numbers);
+  })();
+}
